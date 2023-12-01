@@ -29,6 +29,19 @@ public class Tabungan {
         } else { System.out.println("Saldo tidak mencukupi"); }
     }
 
+    public void transferInPoket(Tabungan poket, double jumlah){
+        saldo += jumlah;
+        listsTransaksi.add(new TransaksiTransferInPoket(formattedDate, jumlah, poket.getNoRek()));
+    }
+
+    public void transferOutPoket(Tabungan poket, double jumlah){
+        if (saldo >= jumlah){
+            saldo -= jumlah;
+            listsTransaksi.add(new TransaksiTranserOutPoket(formattedDate, jumlah, poket.getNoRek()));
+            poket.transferInPoket(poket, jumlah);
+        } else { System.out.println("Saldo tidak mencukupi"); }
+    }
+
     public void mutasiRekening() {
         System.out.println("Mutasi Rekening " + noRek + ":");
         for (Transaksi transaksi : listsTransaksi){ System.out.println(transaksi); }
