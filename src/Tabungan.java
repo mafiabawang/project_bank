@@ -37,8 +37,19 @@ public class Tabungan {
     public void transferOutPoket(Tabungan poket, double jumlah){
         if (saldo >= jumlah){
             saldo -= jumlah;
-            listsTransaksi.add(new TransaksiTranserOutPoket(formattedDate, jumlah, poket.getNoRek()));
-            poket.transferInPoket(poket, jumlah);
+            listsTransaksi.add(new TransaksiTransferOutPoket(formattedDate, jumlah, poket.getNoRek()));
+        } else { System.out.println("Saldo tidak mencukupi"); }
+    }
+
+    public void transferInUser(Tabungan poket, double jumlah, Nasabah nasabah){
+        saldo += jumlah;
+        listsTransaksi.add(new TransaksiTransferInUser(formattedDate, jumlah, poket.getNoRek(), nasabah.getNama()));
+    }
+
+    public void transferOutUser(Tabungan poket, double jumlah, Nasabah nasabah){
+        if (saldo >= jumlah){
+            saldo -= jumlah;
+            listsTransaksi.add(new TransaksiTransferOutUser(formattedDate, jumlah, poket.getNoRek(), nasabah.getNama()));
         } else { System.out.println("Saldo tidak mencukupi"); }
     }
 

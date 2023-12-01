@@ -26,7 +26,7 @@ public class Nasabah extends User{
         else { System.out.println("Tabungan dengan nomor rekening " + noRek + " tidak ditemukan."); }
     }
 
-    public String getNoRek(){
+    public String getNoRek(){ //untuk fitur otomatis penambahan Rekening
         return listsTabungan.get(0).getNoRek();
     }
 }

@@ -12,4 +12,12 @@ public class Bank {
 
         return null;
     }
+
+    public Nasabah getNasabah(String username){
+        for (Nasabah nasabah : listsNasabah)
+            if (nasabah.getUsername().equals(username))
+                return nasabah;
+
+        return null;
+    }
 }

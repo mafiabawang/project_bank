@@ -1,6 +1,6 @@
-public class TransaksiTranserOutPoket extends Transaksi{
+public class TransaksiTransferOutPoket extends Transaksi{
     private String tujuanRek;
-    public TransaksiTranserOutPoket(String tanggal, double jumlah, String tujuanRek) {
+    public TransaksiTransferOutPoket(String tanggal, double jumlah, String tujuanRek) {
         super(tanggal, jumlah);
         this.tujuanRek = tujuanRek;
     }
