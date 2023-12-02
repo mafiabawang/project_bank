@@ -41,15 +41,15 @@ public class Tabungan {
         } else { System.out.println("Saldo tidak mencukupi"); }
     }
 
-    public void transferInUser(Tabungan poket, double jumlah, Nasabah nasabah){
+    public void transferInUser(Tabungan poket, double jumlah, String fromRek){
         saldo += jumlah;
-        listsTransaksi.add(new TransaksiTransferInUser(formattedDate, jumlah, poket.getNoRek(), nasabah.getNama()));
+        listsTransaksi.add(new TransaksiTransferInUser(formattedDate, jumlah, poket.getNoRek(), fromRek));
     }
 
-    public void transferOutUser(Tabungan poket, double jumlah, Nasabah nasabah){
+    public void transferOutUser(Tabungan poket, double jumlah, String toRek){
         if (saldo >= jumlah){
             saldo -= jumlah;
-            listsTransaksi.add(new TransaksiTransferOutUser(formattedDate, jumlah, poket.getNoRek(), nasabah.getNama()));
+            listsTransaksi.add(new TransaksiTransferOutUser(formattedDate, jumlah, poket.getNoRek(), toRek));
         } else { System.out.println("Saldo tidak mencukupi"); }
     }
 

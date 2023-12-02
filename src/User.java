@@ -11,4 +11,8 @@ public class User {
     public String getUsername(){ return username; }
     public String getNama() { return nama; }
     public String getPassword() { return password; }
+
+    public void setNama(String nama) { this.nama = nama; }
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
 }
