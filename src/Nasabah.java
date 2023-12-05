@@ -1,10 +1,10 @@
-import java.math.BigInteger;
+import java.math    .BigInteger;
 import java.util.ArrayList;
 public class Nasabah extends User{
     private ArrayList<Tabungan> listsTabungan;
-    private double totalSaldo = 0;
     private int pin, tries;
-    private boolean isBlock;
+    private double totalSaldo;
+    private boolean isBlokir;
     public Nasabah(String idUser, String username, String nama, String password, String noRek) {
         super(idUser, username, nama, password);
         listsTabungan = new ArrayList<>();
@@ -21,9 +21,10 @@ public class Nasabah extends User{
         return null;
     }
 
-    public void cekSaldoKeseluruhan(){
+    public double cekSaldoKeseluruhan(){
+        totalSaldo = 0;
         for (Tabungan tabungan : listsTabungan) totalSaldo += tabungan.getSaldo();
-        System.out.println("Saldo keseluruhan " + getNama() + " : " + totalSaldo);
+        return totalSaldo;
     }
 
     public void cekMutasiRekening(String noRek){

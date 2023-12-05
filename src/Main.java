@@ -2,14 +2,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
-
     public static void setorTunai(Scanner scanner, Nasabah nasabah){
         System.out.print("Masukkan nomer poket untuk setor tunai: ");
         Tabungan cekTabungan = nasabah.getTabungan(scanner.next());
 
         if (cekTabungan != null){
             System.out.print("Masukkan jumlah setoran: ");
-            cekTabungan.setor(scanner.nextDouble());
+            double jumlah = scanner.nextDouble();
+            if (jumlah % 50000 == 0) cekTabungan.setor(jumlah);
+            else System.out.println("Mohon maaf, setor hanya bisa pada pecahan 50k dan 100k");
         } else { System.out.println("Tabungan dengan nomor rekening tidak ditemukan."); }
     }
 
@@ -19,8 +20,27 @@ public class Main {
 
         if (cekTabungan != null){
             System.out.print("Masukkan jumlah penarikan: ");
-            cekTabungan.tarik(scanner.nextDouble());
+            double jumlah = scanner.nextDouble();
+            if (jumlah % 50000 == 0) {
+                cekTabungan.tarik(jumlah);
+                int convertInt = (int) jumlah;
+                pecahanUang(convertInt);
+            }
+            else System.out.println("Mohon maaf, tarik hanya bisa pada pecahan 50k dan 100k");
         } else { System.out.println("Tabungan dengan nomor rekening tidak ditemukan."); }
+    }
+
+    public static void pecahanUang(int jml){
+        int[] jumlahPecahan = new int[2];
+        int[] nilaiPecahan = { 100000, 50000 };
+
+        for (int i = 0; i < nilaiPecahan.length; i++){
+            jumlahPecahan[i] = jml / nilaiPecahan[i];
+            jml %= nilaiPecahan[i];
+        }
+
+        for (int i = 0; i < nilaiPecahan.length; i++)
+            System.out.println("Jumlah pecahan uang " + nilaiPecahan[i] + ": " + jumlahPecahan[i]);
     }
 
     public static void cekSaldoPoket(Scanner scanner, Nasabah nasabah){
@@ -35,6 +55,10 @@ public class Main {
     public static void cekMutasiPoket(Scanner scanner, Nasabah nasabah){
         System.out.print("Masukkan nomer poket untuk Mutasi: ");
         nasabah.cekMutasiRekening(scanner.next());
+    }
+
+    public static void cekSaldoKeseluruhan(Nasabah nasabah){
+        System.out.println("Saldo keseluruhan " + nasabah.getNama() + " : " + nasabah.cekSaldoKeseluruhan());
     }
 
     public static void transferAntarPoket(Scanner scanner, Nasabah nasabah){
@@ -87,9 +111,8 @@ public class Main {
         System.out.println("-------------------------------------------------");
         System.out.println("| idUser \t\t| Username \t| Nama \t\t\t\t|");
         System.out.println("-------------------------------------------------");
-        for (Nasabah nasabah : listsNasabah){
+        for (Nasabah nasabah : listsNasabah)
             System.out.println("| " + nasabah.getIdUser() + " \t| " + nasabah.getUsername() + " \t| " + nasabah.getNama() + " \t|");
-        }
         System.out.println("-------------------------------------------------");
     }
 
@@ -102,7 +125,7 @@ public class Main {
         for (Nasabah nasabah : listsNasabah){
             ArrayList<Tabungan> listsTabungan = nasabah.getListsTabungan();
             for (Tabungan tabungan : listsTabungan)
-                System.out.println("| " + nasabah.getUsername() + " \t| " + tabungan.getNoRek() + " \t|");
+                System.out.println("| " + nasabah.getUsername() + " \t| " + tabungan.getNoRek() + " \t| ");
         }
         System.out.println("---------------------------------");
     }
@@ -127,7 +150,8 @@ public class Main {
 
         Tabungan tabungan = nasabah.getTabungan(rekTujuan);
         if (tabungan != null){
-            nasabah.hapusRek(tabungan);
+            if (tabungan.getSaldo() > 0) System.out.println("Mohon maaf rekening ini masih memiliki saldo");
+            else nasabah.hapusRek(tabungan);
         } else { System.out.println("Nomer Poket tidak tersedia"); }
     }
 
@@ -155,7 +179,7 @@ public class Main {
         if (!(nasabah.getUsername().equals(usernameBaru) && nasabah.getNama().equals(namaBaru))) {
             nasabah.setUsername(usernameBaru);
             nasabah.setNama(namaBaru);
-        } else { System.out.println("Data tidak ada yang berubah"); }
+        } else System.out.println("Data tidak ada yang berubah");
     }
 
     public static void hapusNasabah(Scanner scanner, Bank bank){
@@ -163,7 +187,10 @@ public class Main {
         String username = scanner.nextLine();
         Nasabah cekNasabah = bank.getNasabah(username);
 
-        if (cekNasabah != null) bank.hapusNasabah(cekNasabah);
+        if (cekNasabah != null){
+            if (cekNasabah.cekSaldoKeseluruhan() > 0) System.out.println("Mohon maaf tidak bisa dihapus, karena masih ada saldo di tabungan Nasabah ini");
+            else bank.hapusNasabah(cekNasabah);
+        }
         else System.out.println("Nasabah dengan username tersebut tidak ada");
     }
 
@@ -251,7 +278,7 @@ public class Main {
                     cekMutasiPoket(scanner, nasabah);
                     break;
                 case 5:
-                    nasabah.cekSaldoKeseluruhan();
+                    cekSaldoKeseluruhan(nasabah);
                     break;
                 case 6:
                     nasabah.tambahTabungan();
@@ -304,9 +331,8 @@ public class Main {
                     String adminpass = scanner.next();
                     Admin adminLogin = bank.getAdmin(adminname, adminpass);
 
-                    if (adminLogin != null){
-                        adminMenu(scanner, bank);
-                    } else { System.out.println("Mohon Maaf Adminname & Adminpass Salah"); }
+                    if (adminLogin != null) adminMenu(scanner, bank);
+                    else System.out.println("Mohon Maaf Adminname & Adminpass Salah");
                     break;
                 case 2:
                     System.out.print("Masukkan username Anda : ");
@@ -315,9 +341,8 @@ public class Main {
                     String password = scanner.next();
                     Nasabah nasabahLogin = bank.getNasabah(username, password);
 
-                    if (nasabahLogin != null){
-                        nasabahMenu(scanner, nasabahLogin, bank);
-                    } else { System.out.println("Mohon Maaf Username & Password Salah"); }
+                    if (nasabahLogin != null) nasabahMenu(scanner, nasabahLogin, bank);
+                    else System.out.println("Mohon Maaf Username & Password Salah");
                     break;
                 case 0:
                     System.out.println("Terima kasih telah menggunakan layanan BANK JAVA.");
